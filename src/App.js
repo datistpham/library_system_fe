@@ -59,23 +59,29 @@ const App = () => {
             <Routes>
               <Route path={"*"} element={<Navigate to="/404" replace />} />
 
-              <Route
-                path={"/"}
-                element={
-                  // <KeepAlive>
-                    <Home />
-                  // </KeepAlive>
-                }
-              />
+
               <Route path={"/signup"} element={<Signup />} />
               <Route path={"/forgot-password"} element={<ForgotPassword />} />
               {auth === true ? (
+                <>
+                <Route
+                  path={"/"}
+                  element={
+                    // <KeepAlive>
+                      <Home />
+                    // </KeepAlive>
+                  }
+                />
                 <Route
                   path={"/login"}
                   element={<Navigate to={"/"} replace={true} />}
                 />
+                </>
               ) : (
-                <Route path={"/login"} element={<Login />} />
+                <>
+                  <Route path={"/"} element={<Login />} />
+                  <Route path={"/login"} element={<Login />} />
+                </>
               )}
               <Route path={"/login"} element={<Login />} />
               <Route path={"/cart"} element={<Cart />} />

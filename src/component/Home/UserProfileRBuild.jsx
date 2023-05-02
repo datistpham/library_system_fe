@@ -43,8 +43,6 @@ export default function UserProfileRBuild(props) {
           <UserProfile {...props} />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Disagree</Button>
-          <Button onClick={handleClose}>Agree</Button>
         </DialogActions>
       </Dialog>
     </div>
