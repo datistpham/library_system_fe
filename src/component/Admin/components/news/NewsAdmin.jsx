@@ -13,14 +13,15 @@ import moment from "moment";
 import delete_blog from "../../../../api/admin/delete_blog";
 import "react-quill/dist/quill.snow.css";
 import { createBrowserHistory } from "history";
-
 // #1 import quill-image-uploader
 import ImageUploader from "quill-image-uploader";
 import get_detail_blog from "../../../../api/admin/get_detail_blog";
+import edit_blog from "../../../../api/blog/edit_blog";
 // #2 register module
 Quill.register("modules/imageUploader", ImageUploader);
 
 export default function NewsAdmin() {
+
   return (
     <Routes>
       <Route path={"/"} element={<ListBlog></ListBlog>} />
@@ -31,6 +32,7 @@ export default function NewsAdmin() {
 }
 
 const ListBlog = () => {
+  const navigate= useNavigate()
   const handleDelete = (id) => {
     setData(data.filter((item) => item.id !== id));
   };
@@ -72,6 +74,7 @@ const ListBlog = () => {
         return (
           <div style={{ gap: 10, display: "flex", alignItems: "center" }}>
             <>
+              <Button onClick={()=> navigate("/admin/news/edit/"+ params.row.id) } type={"primary"} variant={"contained"}>Edit blog</Button>
               <Button
                 onClick={() => {
                   swal("Notice", "Are you sure want to delete this blog ?", {
@@ -102,7 +105,6 @@ const ListBlog = () => {
       },
     },
   ];
-  const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [change, setChange] = useState(false);
   useEffect(() => {
@@ -295,9 +297,8 @@ class EditBlog extends React.Component {
     this.setState({ text: value });
   };
   componentDidMount() {
-    const { id } = this.props.match.params;
     (async () => {
-      const result = await get_detail_blog(id);
+      const result = await get_detail_blog(window.location.href.split('/')[6]);
       this.setState({
         text: result.content,
         title: result.title,
@@ -403,13 +404,14 @@ class EditBlog extends React.Component {
                   this.state.image?.thumbUrl
                 );
 
-                const result = await add_blog(
+                const result = await edit_blog(
                   this.state.text,
                   imageFinal?.img,
-                  this.state.title
+                  this.state.title,
+                  window.location.href.split('/')[6]
                 );
-                if (result?.add === true) {
-                  swal("Notice", "Create is successfully", "success")
+                if (result?.update === true) {
+                  swal("Notice", "Update is successfully", "success")
                   .then(()=> this.handleClick())
                 } else {
                   swal("Notice", "Error", "error");
@@ -418,7 +420,7 @@ class EditBlog extends React.Component {
               variant={"contained"}
               style={{ marginTop: 16 }}
             >
-              Create
+              Update
             </Button>
           </div>
           <div className="preview" style={{ flex: "1 1 0" }}>

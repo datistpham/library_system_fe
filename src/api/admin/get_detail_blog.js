@@ -4,7 +4,7 @@ import { API_URL } from "../../config"
 const get_detail_blog= async (blogId)=> {
     const res= await axios({
         url: API_URL+ "/api/v3/blog/detail",
-        method: "POST",
+        method: "GET",
         params: {
             blogId
         }
